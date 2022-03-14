@@ -1,0 +1,7 @@
+*.sum
+*.log
+
+.env
+*.conf
+*.yaml
+*.json
