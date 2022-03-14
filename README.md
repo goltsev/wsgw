@@ -6,6 +6,8 @@ This application is a Websocket gateway for BitMex Websocket API.
 
 Application uses `.env` file and environment variables for configuration.
 
+List of used environment variables:
+
 * `KEY` -- BitMex API key
 * `SECRET` -- BitMex API secret
 * `URL` -- BitMex Websocket API endpoint URL
