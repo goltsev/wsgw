@@ -67,7 +67,7 @@ func TestUpdate(t *testing.T) {
 				List: test.list,
 				Conn: stub,
 			}
-			sub.Update(test.notification)
+			assert.NoError(t, sub.Update(test.notification))
 			assert.Equal(t, test.expected, stub.v)
 		})
 	}

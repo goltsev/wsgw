@@ -27,12 +27,12 @@ func NewWSServer(service *Service) *WSServer {
 func (s *WSServer) HandleHTTP(c *gin.Context) {
 	conn, err := s.upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
-		c.AbortWithError(http.StatusInternalServerError, err)
+		c.AbortWithStatus(http.StatusInternalServerError)
 	}
 	defer conn.Close()
 
 	if err := s.HandleWebSocket(conn); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithStatus(http.StatusBadRequest)
 	}
 }
 

@@ -11,7 +11,10 @@ func main() {
 }
 
 func run() error {
-	conf := ReadConfigViper()
+	conf, err := ReadConfigViper()
+	if err != nil {
+		return err
+	}
 
 	service := NewService()
 

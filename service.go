@@ -22,7 +22,9 @@ func (s *Service) Unsubscribe(sub *Subscriber) {
 }
 
 func (s *Service) Notify(n *Notification) {
-	for _, v := range s.subs {
-		v.Update(n)
+	for _, sub := range s.subs {
+		if err := sub.Update(n); err != nil {
+			s.Unsubscribe(sub)
+		}
 	}
 }

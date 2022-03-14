@@ -23,14 +23,18 @@ func run() error {
 	defer conn.Close()
 
 	go func() {
-		conn.WriteJSON(map[string]interface{}{
+		if err := conn.WriteJSON(map[string]interface{}{
 			"action":  "subscribe",
 			"symbols": []string{"MANAUSDT", "XBTZ22", "asd", "qwe", "XBTUSDT"},
-		})
+		}); err != nil {
+			log.Fatal(err)
+		}
 		time.Sleep(time.Second * 10)
-		conn.WriteJSON(map[string]interface{}{
+		if err := conn.WriteJSON(map[string]interface{}{
 			"action": "unsubscribe",
-		})
+		}); err != nil {
+			log.Fatal(err)
+		}
 	}()
 	for {
 		_, p, err := conn.ReadMessage()
