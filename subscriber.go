@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 type WriterJSON interface {
@@ -9,12 +10,13 @@ type WriterJSON interface {
 }
 
 type Subscriber struct {
-	ID   int
+	id   int
 	List []string
 	Conn WriterJSON
+	m    sync.RWMutex
 }
 
-func (s Subscriber) Update(n *Notification) error {
+func (s *Subscriber) Update(n *Notification) error {
 	if len(s.List) == 0 {
 		if err := s.Conn.WriteJSON(n); err != nil {
 			return fmt.Errorf("write json: %w", err)
@@ -30,4 +32,16 @@ func (s Subscriber) Update(n *Notification) error {
 		}
 	}
 	return nil
+}
+
+func (s *Subscriber) SetID(id int) {
+	s.m.Lock()
+	s.id = id
+	s.m.Unlock()
+}
+
+func (s *Subscriber) ID() int {
+	s.m.RLock()
+	defer s.m.RUnlock()
+	return s.id
 }
