@@ -1,6 +1,8 @@
 package main
 
-import "sync"
+import (
+	"sync"
+)
 
 type Service struct {
 	subs  map[int]*Subscriber
@@ -29,11 +31,13 @@ func (s *Service) Unsubscribe(sub *Subscriber) {
 }
 
 func (s *Service) Notify(n *Notification) {
+	m := make(map[int]*Subscriber)
 	s.mutex.Lock()
-	defer s.mutex.Unlock()
-	for _, sub := range s.subs {
-		if err := sub.Update(n); err != nil {
-			s.Unsubscribe(sub)
-		}
+	for k, v := range s.subs {
+		m[k] = v
+	}
+	s.mutex.Unlock()
+	for _, sub := range m {
+		sub.Update(n)
 	}
 }

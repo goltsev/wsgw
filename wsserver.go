@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,16 +32,14 @@ func (s *WSServer) HandleHTTP(c *gin.Context) {
 	}
 	defer conn.Close()
 
-	if err := s.HandleWebSocket(conn); err != nil {
+	if err := s.HandleWebSocket(c.Request.Context(), conn); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}
 }
 
-func (s *WSServer) HandleWebSocket(conn *websocket.Conn) error {
+func (s *WSServer) HandleWebSocket(ctx context.Context, conn *websocket.Conn) error {
 	var r Request
-	sub := &Subscriber{
-		Conn: conn,
-	}
+	sub := NewSubscriber(ctx, conn)
 	defer s.service.Unsubscribe(sub)
 	for {
 		if err := conn.ReadJSON(&r); err != nil {

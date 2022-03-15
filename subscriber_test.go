@@ -65,9 +65,9 @@ func TestUpdate(t *testing.T) {
 			stub := &WriterJSONStub{}
 			sub := &Subscriber{
 				List: test.list,
-				Conn: stub,
+				conn: stub,
 			}
-			assert.NoError(t, sub.Update(test.notification))
+			assert.NoError(t, sub.write(test.notification))
 			assert.Equal(t, test.expected, stub.v)
 		})
 	}
